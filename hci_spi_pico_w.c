@@ -93,24 +93,22 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(HCI_SPI_readable_obj, HCI_SPI_readable);
 
 
 
-//STATIC mp_obj_t HCI_SPI_transfer(mp_obj_t self_in, mp_obj_t data_obj, mp_obj_t a_obj, mp_obj_t b_obj) {
-STATIC mp_obj_t HCI_SPI_transfer(mp_obj_t self_in, mp_obj_t data_obj, mp_obj_t a_obj) {
-    mp_check_self(mp_obj_is_str_or_bytes(data_obj));
-    GET_STR_DATA_LEN(data_obj, data, data_len);
+STATIC mp_obj_t HCI_SPI_transfer(size_t n_args, const mp_obj_t *args) {
+    mp_check_self(mp_obj_is_str_or_bytes(args[1]));
+    GET_STR_DATA_LEN(args[1], data, data_len);
 
-    int send_len    = mp_obj_get_int(a_obj);
-    int receive_len = 0; //mp_obj_get_int(b_obj);
-
-    int xxx = send_len + receive_len;
+    int send_len    = mp_obj_get_int(args[2]);
+    int receive_len = mp_obj_get_int(args[3]);
 
     memcpy(buf, data, data_len);
 
-    cyw43_spi_transfer(&cyw43_state, buf, 4, buf, 32);
+    cyw43_spi_transfer(&cyw43_state, data, send_len, buf, receive_len);
 
-    return mp_obj_new_bool(xxx > 1);
+    return mp_obj_new_bytes(buf, receive_len);
 }
 
-STATIC MP_DEFINE_CONST_FUN_OBJ_3(HCI_SPI_transfer_obj, HCI_SPI_transfer);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(HCI_SPI_transfer_obj, 4, 4, HCI_SPI_transfer);
+
 
 
 
@@ -126,7 +124,7 @@ STATIC mp_obj_t HCI_SPI_make_new(const mp_obj_type_t *type, size_t n_args, size_
     HCI_SPI_obj_t *self = mp_obj_malloc(HCI_SPI_obj_t, type);
 
     cyw43_init(&cyw43_state);
-    cyw43_bluetooth_hci_init();
+    cyw43_bluetooth_hci_init();  // load bt firmware now rather than later
     buf_len = 0;
 
     self->initialised = 1;
