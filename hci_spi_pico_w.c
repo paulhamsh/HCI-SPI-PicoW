@@ -111,7 +111,13 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(HCI_SPI_transfer_obj, 4, 4, HCI_SPI_t
 
 
 
+extern bool hci_transport_ready;
 
+STATIC mp_obj_t HCI_SPI_transport_ready(mp_obj_t self_in) {
+    return mp_obj_new_bool(hci_transport_ready);
+}
+
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(HCI_SPI_transport_ready_obj, HCI_SPI_transport_ready);
 
 
 
@@ -139,7 +145,7 @@ STATIC const mp_rom_map_elem_t HCI_SPI_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_send_raw), MP_ROM_PTR(&HCI_SPI_send_raw_obj) },
     { MP_ROM_QSTR(MP_QSTR_receive_raw), MP_ROM_PTR(&HCI_SPI_receive_raw_obj) },
     { MP_ROM_QSTR(MP_QSTR_transfer), MP_ROM_PTR(&HCI_SPI_transfer_obj) },
-
+    { MP_ROM_QSTR(MP_QSTR_transport_ready), MP_ROM_PTR(&HCI_SPI_transport_ready_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(HCI_SPI_locals_dict, HCI_SPI_locals_dict_table);
