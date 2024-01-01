@@ -12,6 +12,10 @@ Creates a module HCI_SPI_PicoW
 b'\x00\x00\x00\x00\xad\xbe\xed\xfe'
 ```
 
+## Edit needed in pico-sdk/src/rp2_common/pico_cyw43_driver/btstack_hci_transport_cyw43.c
+
+Change ```static bool hci_transport_ready``` to ```bool hci_transport_ready``` (in ```pico-sdk/src/rp2_common/pico_cyw43_driver/btstack_hci_transport_cyw43.c```) then it can be accessed from Micropython code.   
+Otherwise ensure that ```#define TRANSPORT_READY_CHECK``` is not defined.   
 
 ## How to build in WSL
 ```
