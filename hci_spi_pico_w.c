@@ -6,6 +6,9 @@
 
 #define CYW43_ENABLE_BLUETOOTH 1
 
+// Only set this if you have edited pico-sdk/src/rp2_common/pico_cyw43_driver/btstack_hci_transport_cyw43.c
+// To remove 'static' from bool hci_transport_ready
+#define TRANSPORT_READY_CHECK 1
 
 #define BUF_MAX 500
 uint8_t buf[BUF_MAX];
@@ -110,7 +113,7 @@ STATIC mp_obj_t HCI_SPI_transfer(size_t n_args, const mp_obj_t *args) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(HCI_SPI_transfer_obj, 4, 4, HCI_SPI_transfer);
 
 
-
+#ifdef TRANSPORT_READY_CHECK
 extern bool hci_transport_ready;
 
 STATIC mp_obj_t HCI_SPI_transport_ready(mp_obj_t self_in) {
@@ -118,7 +121,7 @@ STATIC mp_obj_t HCI_SPI_transport_ready(mp_obj_t self_in) {
 }
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(HCI_SPI_transport_ready_obj, HCI_SPI_transport_ready);
-
+#endif
 
 
 // This represents HCI_SPI.__new__ and HCI_SPI.__init__, which is called when
@@ -145,7 +148,9 @@ STATIC const mp_rom_map_elem_t HCI_SPI_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_send_raw), MP_ROM_PTR(&HCI_SPI_send_raw_obj) },
     { MP_ROM_QSTR(MP_QSTR_receive_raw), MP_ROM_PTR(&HCI_SPI_receive_raw_obj) },
     { MP_ROM_QSTR(MP_QSTR_transfer), MP_ROM_PTR(&HCI_SPI_transfer_obj) },
+#ifdef TRANSPORT_READY_CHECK
     { MP_ROM_QSTR(MP_QSTR_transport_ready), MP_ROM_PTR(&HCI_SPI_transport_ready_obj) },
+#endif
 };
 
 STATIC MP_DEFINE_CONST_DICT(HCI_SPI_locals_dict, HCI_SPI_locals_dict_table);
