@@ -6,7 +6,8 @@ Creates a module HCI_SPI_PicoW
 ```
 >>> from HCI_SPI_PicoW import *
 >>> bt = HCI_SPI()
->>> r = bt.transfer(b'\x04\xa0\x00\x40', 4, 8)  # 0x40_00_a0_04 in little endian byte order (read, inc, SPI function, 0x14, 0x4)
+>>> # 0x40_00_a0_04 in little endian byte order command: read, inc, SPI function, 0x14, 0x4
+>>> r = bt.transfer(b'\x04\xa0\x00\x40', 4, 8)
 >>> print(r)
 b'\x00\x00\x00\x00\xad\xbe\xed\xfe'
 ```
